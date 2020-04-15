@@ -67,12 +67,22 @@ void main() {
     else if(course_type==2){
       //branch elective
       //ask for year and branch before name and code of course
-      print('Enter Branch :');
-      var branch_b = stdin.readLineSync();
+      String branch_b='';
+      while(true){
+      print('Enter the Branch Name:');
+      branch_b = stdin.readLineSync();
+      if(branch_index.containsValue(branch_b))break;
+      else print("Kindly enter a valid branch name. Valid branch names are \n   1)CE\n   2)CVE\n   3)CSE\n   4)ECE\n   5)ME\n   6)MME\n   7)MNE\n   8)EEE\n   9)IT");
+    }
       File outputFile=new File('branch_e.txt');
       outputFile.createSync();
-      print('Enter year :');
-      var year_b = stdin.readLineSync();
+      String year_b='5';
+      while(year_b.codeUnitAt(0)>'4'.codeUnitAt(0)||year_b.codeUnitAt(0)<'1'.codeUnitAt(0)||year_b.length>1){
+        print('Enter year :');
+        year_b = stdin.readLineSync();
+        print(year_b);
+        if(year_b.codeUnitAt(0)>'4'.codeUnitAt(0)||year_b.codeUnitAt(0)<'1'.codeUnitAt(0)||year_b.length>1)print('Invalid year entered.');
+      }
       print('Input the course name now');
       var course_name_b = stdin.readLineSync();
       print('Input the course code now');
@@ -105,10 +115,20 @@ void main() {
       }
     }
     //student type
-    print('Enter your Branch :');
-    var branch_s = stdin.readLineSync();
-    print('Enter your Year :');
-    var year_s = stdin.readLineSync();
+    String branch_s='';
+    while(true){
+      print('Enter your Branch :');
+      branch_s = stdin.readLineSync();
+      if(branch_index.containsValue(branch_s))break;
+      else print("Kindly enter a valid branch name. Valid branch names are \n   1)CE\n   2)CVE\n   3)CSE\n   4)ECE\n   5)ME\n   6)MME\n   7)MNE\n   8)EEE\n   9)IT");
+    }
+    String year_s='5';
+    while(year_s.codeUnitAt(0)>'4'.codeUnitAt(0)||year_s.codeUnitAt(0)<'1'.codeUnitAt(0)||year_s.length>1){
+        print('Enter your year :');
+        year_s = stdin.readLineSync();
+        print(year_s);
+        if(year_s.codeUnitAt(0)>'4'.codeUnitAt(0)||year_s.codeUnitAt(0)<'1'.codeUnitAt(0)||year_s.length>1)print('Invalid year entered.');
+      }
     String a='';
     final file = new File('branch_e.txt');
     Stream<List<int>> inputStream = file.openRead();
