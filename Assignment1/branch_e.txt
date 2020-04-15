@@ -1,0 +1,4 @@
+CSE_2 DSA CS112
+CSE_2 Compilers CS113
+ME_1 Mechanical ME110
+CSE_3 ML CS321
