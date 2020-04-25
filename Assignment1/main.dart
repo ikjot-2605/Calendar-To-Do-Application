@@ -60,7 +60,7 @@ void main() {
       var course_code_o = stdin.readLineSync();
       File outputFile=new File('branch_o.txt');
       outputFile.createSync();
-      String total_o=course_name_o+' '+course_code_o+'\n\n';
+      String total_o=course_name_o+' '+course_code_o+'\n';
       outputFile.writeAsStringSync(total_o, mode:FileMode.append);
       print('Open elective course added!');
     }
@@ -87,7 +87,7 @@ void main() {
       var course_name_b = stdin.readLineSync();
       print('Input the course code now');
       var course_code_b = stdin.readLineSync();
-      String total=branch_b+'_'+year_b+' '+course_name_b+' '+course_code_b+'\n\n';
+      String total=branch_b+'_'+year_b+' '+course_name_b+' '+course_code_b+'\n';
       outputFile.writeAsStringSync(total, mode:FileMode.append);
     }
 

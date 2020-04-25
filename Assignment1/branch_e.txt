@@ -6,3 +6,4 @@ CSE_12 CSD AS1234
 
 CSE_4 AI CS412
 
+EEE_3 Integrated Circuits EE110
