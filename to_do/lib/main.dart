@@ -53,9 +53,9 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     getStringValuesSF().then((value){
       imp=value;
-      print('Async done');
     });
     super.initState();
+    print('Async done');
   }
   @override
   Widget build(BuildContext context) {
