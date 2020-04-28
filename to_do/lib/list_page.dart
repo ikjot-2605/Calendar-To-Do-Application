@@ -36,7 +36,7 @@ class _ListPageState extends State<ListPage> {
             style: TextStyle(
               fontSize: 25.0,
               fontWeight: FontWeight.bold,
-              fontFamily: 'Serif',
+              fontFamily: 'poppins',
             ),
           ),
           centerTitle: true,
@@ -51,10 +51,22 @@ class _ListPageState extends State<ListPage> {
         children: <Widget>[
           Container(
             height: 200.0,
-            child: TextField(
+            child: TextFormField(
               controller: myController,
               keyboardType: TextInputType.multiline,
               maxLines: null,
+              decoration: new InputDecoration(
+                labelText: 'Add here',
+                fillColor: Colors.white,
+                border: new OutlineInputBorder(
+                  borderRadius: new BorderRadius.circular(25.0),
+                  borderSide: new BorderSide(),
+                ),
+                //fillColor: Colors.green
+              ),
+              style: new TextStyle(
+                fontFamily: "Poppins",
+              ),
             ),
           ),
           SizedBox(
@@ -65,7 +77,7 @@ class _ListPageState extends State<ListPage> {
             onPressed: () {
               final newNote = Note(myController.text);
               addNote(newNote);
-
+              Navigator.of(context, rootNavigator: true).pop('testAlert');
             },
           ),
         ],

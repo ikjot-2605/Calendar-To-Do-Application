@@ -7,8 +7,8 @@ import 'model/note.dart';
 import 'dart:ui' as ui;
 import 'package:flutter/rendering.dart';
 void main() async{
-  //RenderErrorBox.backgroundColor = Colors.transparent;
-  //RenderErrorBox.textStyle = ui.TextStyle(color: Colors.transparent);
+  RenderErrorBox.backgroundColor = Colors.transparent;
+  RenderErrorBox.textStyle = ui.TextStyle(color: Colors.transparent);
   WidgetsFlutterBinding.ensureInitialized();
   final appDocumentDir = await getApplicationDocumentsDirectory();
   Hive.init(appDocumentDir.path);
@@ -45,7 +45,9 @@ class _MyAppState extends State<MyApp> {
           // Although opening a Box takes a very short time,
           // we still need to return something before the Future completes.
           else
-            return Scaffold();
+            return Scaffold(
+              backgroundColor: Colors.black,
+            );
         },
       ),
     );

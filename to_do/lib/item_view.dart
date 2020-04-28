@@ -31,34 +31,25 @@ class _ItemListState extends State<ItemList> {
         valueListenable: Hive.box('notes').listenable(),
         builder: (context, Box notes, _) {
           updating_field() {
-            if (pressed == false) {
+
               return Center(
-                child: Text(
-                  notes.getAt(currIndex).title,
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    wordSpacing: 2.0,
+                child: Container(
+                  height: 200.0,
+                  width: MediaQuery.of(context).size.width,
+                  child: Card(
+                    child: Center(
+                      child: Text(
+                        notes.getAt(currIndex).title,
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          wordSpacing: 2.0,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               );
-            } else {
-              return new TextFormField(
-                controller: myController1,
-                decoration: new InputDecoration(
-                  labelText: notes.getAt(currIndex).title,
-                  fillColor: Colors.white,
-                  border: new OutlineInputBorder(
-                    borderRadius: new BorderRadius.circular(25.0),
-                    borderSide: new BorderSide(),
-                  ),
-                  //fillColor: Colors.green
-                ),
-                style: new TextStyle(
-                  fontFamily: "Poppins",
-                ),
-              );
-            }
-          }
+                      }
 
           updateButton() {
             return FlatButton(
@@ -155,7 +146,7 @@ class _ItemListState extends State<ItemList> {
               ),
             );
           }
-
+          int todisplay=currIndex+1;
           return MaterialApp(
             theme: ThemeData(
               brightness: Brightness.dark,
@@ -163,7 +154,7 @@ class _ItemListState extends State<ItemList> {
             ),
             home: Scaffold(
               appBar: AppBar(
-                title: Text('Item Details'),
+                title: Text('Note $todisplay'),
                 centerTitle: true,
               ),
               body: Column(
