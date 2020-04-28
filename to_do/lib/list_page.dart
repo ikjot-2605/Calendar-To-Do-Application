@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:todo/main.dart';
 import 'model/note.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-
+import 'item_view.dart';
 TextEditingController myController = new TextEditingController();
-
+int currIndex=0;
 class ListPage extends StatefulWidget {
   @override
   _ListPageState createState() => _ListPageState();
@@ -35,74 +36,12 @@ class _ListPageState extends State<ListPage> {
             style: TextStyle(
               fontSize: 25.0,
               fontWeight: FontWeight.bold,
+              fontFamily: 'Serif',
             ),
           ),
           centerTitle: true,
         ),
         body: _buildListView()
-        /*ListTileTheme(
-        contentPadding: EdgeInsets.all(10.0),
-        textColor: Colors.grey[300],
-        selectedColor: Colors.grey[200],
-        child: ListView(
-          children: <Widget>[
-            Card(
-              color: Colors.grey[800],
-              child: ListTile(
-                title: Center(child: Text('Item')),
-              ),
-            ),
-            Card(
-              color: Colors.grey[800],
-              child: ListTile(
-                title: Center(child: Text('Item')),
-              ),
-            ),
-            Card(
-              color: Colors.grey[800],
-              child: ListTile(
-                title: Center(child: Text('Item')),
-              ),
-            ),
-            Card(
-              color: Colors.grey[800],
-              child: ListTile(
-                title: Center(child: Text('Item')),
-              ),
-            ),
-            Card(
-              color: Colors.grey[800],
-              child: ListTile(
-                title: Center(child: Text('Item')),
-              ),
-            ),
-            Card(
-              color: Colors.grey[800],
-              child: ListTile(
-                title: Center(child: Text('Item')),
-              ),
-            ),
-            Card(
-              color: Colors.grey[800],
-              child: ListTile(
-                title: Center(child: Text('Item')),
-              ),
-            ),
-            Card(
-              color: Colors.grey[800],
-              child: ListTile(
-                title: Center(child: Text('Item')),
-              ),
-            ),
-            Card(
-              color: Colors.grey[800],
-              child: ListTile(
-                title: Center(child: Text('Item')),
-              ),
-            ),
-          ],
-        ),
-      ),*/
         );
   }
 
@@ -126,7 +65,7 @@ class _ListPageState extends State<ListPage> {
             onPressed: () {
               final newNote = Note(myController.text);
               addNote(newNote);
-              setState(() {});
+
             },
           ),
         ],
@@ -153,15 +92,27 @@ class _ListPageState extends State<ListPage> {
               padding: const EdgeInsets.all(10.0),
               child: Container(
                 height: 70.0,
-                child: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Text(
-                        notes.getAt(index).title,
-                        style: TextStyle(
-                          letterSpacing: 1.0,
-                          fontSize: 20.0,
+                child: FlatButton(
+                  onPressed: (){
+                    setState(() {
+                      currIndex=index;
+                    });
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ItemView()),
+                    );
+                  },
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Center(
+                        child: Text(
+                          notes.getAt(index).title,
+                          style: TextStyle(
+                            letterSpacing: 0.4,
+                            fontSize: 20.0,
+                            fontFamily: 'poppins',
+                          ),
                         ),
                       ),
                     ),

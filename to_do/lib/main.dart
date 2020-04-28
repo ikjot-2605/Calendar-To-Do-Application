@@ -4,7 +4,11 @@ import 'package:hive/hive.dart';
 import 'list_page.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'model/note.dart';
+import 'dart:ui' as ui;
+import 'package:flutter/rendering.dart';
 void main() async{
+  //RenderErrorBox.backgroundColor = Colors.transparent;
+  //RenderErrorBox.textStyle = ui.TextStyle(color: Colors.transparent);
   WidgetsFlutterBinding.ensureInitialized();
   final appDocumentDir = await getApplicationDocumentsDirectory();
   Hive.init(appDocumentDir.path);
