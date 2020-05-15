@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive/hive.dart';
 import 'list_page.dart';
+import 'bloc.dart';
 import 'model/note.dart';
 bool pressed = false;
 TextEditingController myController1 = new TextEditingController();
@@ -12,6 +13,7 @@ class ItemView extends StatefulWidget {
 }
 
 class _ItemViewState extends State<ItemView> {
+  final NoteBloc noteBloc = NoteBloc();
   @override
   Widget build(BuildContext context) {
     return ItemList();
@@ -36,16 +38,23 @@ class _ItemListState extends State<ItemList> {
                 child: Container(
                   height: 200.0,
                   width: MediaQuery.of(context).size.width,
-                  child: Card(
-                    child: Center(
-                      child: Text(
-                        notes.getAt(currIndex).title,
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          wordSpacing: 2.0,
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        height: 200.0,
+                        child: Card(
+                          child: Center(
+                            child: Text(
+                              notes.getAt(currIndex).title,
+                              style: TextStyle(
+                                fontSize: 20.0,
+                                wordSpacing: 2.0,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
               );
@@ -119,7 +128,7 @@ class _ItemListState extends State<ItemList> {
             return FlatButton(
               onPressed: (){
                 print(currIndex);
-                notes.deleteAt(currIndex);
+                noteBloc.deleteNoteById(currIndex);
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => ListPage()),
@@ -146,15 +155,20 @@ class _ItemListState extends State<ItemList> {
               ),
             );
           }
-          int todisplay=currIndex+1;
           return MaterialApp(
             theme: ThemeData(
-              brightness: Brightness.dark,
-              backgroundColor: Colors.black,
+              brightness: Brightness.light,
+              backgroundColor: Colors.white,
             ),
             home: Scaffold(
               appBar: AppBar(
-                title: Text('Note $todisplay'),
+                backgroundColor: Colors.white,
+                title: Text(
+                  'Task for '+notesBox.getAt(currIndex).deadlinedate.toString().substring(0,10),
+                  style: TextStyle(
+                    color: Colors.black
+                  ),
+                ),
                 centerTitle: true,
               ),
               body: Column(
@@ -193,8 +207,8 @@ class _updateViewState extends State<updateView> {
     final notesBox = Hive.box('notes');
     return MaterialApp(
       theme: ThemeData(
-        brightness: Brightness.dark,
-        backgroundColor: Colors.black,
+        brightness: Brightness.light,
+        backgroundColor: Colors.white,
       ),
       home: ValueListenableBuilder(
           valueListenable: Hive.box('notes').listenable(),
@@ -223,7 +237,7 @@ class _updateViewState extends State<updateView> {
                   FlatButton(
                     onPressed: () {
                       String updatedText=myController1.text;
-                      notes.putAt(currIndex,Note(updatedText));
+                      noteBloc.updateNote(currIndex,Note(updatedText,DateTime.now(),0));
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => ListPage()),

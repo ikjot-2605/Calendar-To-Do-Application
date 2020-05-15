@@ -15,8 +15,8 @@ void main() async{
   Hive.registerAdapter(NoteAdapter());
   runApp(MaterialApp(
     theme: ThemeData(
-      brightness: Brightness.dark,
-      backgroundColor: Colors.black,
+      brightness: Brightness.light,
+      backgroundColor: Colors.white,
     ),
     home: MyApp(),
 
