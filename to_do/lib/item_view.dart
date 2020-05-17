@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive/hive.dart';
 import 'list_page.dart';
+import 'package:todo/globals.dart' as global;
 import 'bloc.dart';
+import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'model/note.dart';
 bool pressed = false;
 TextEditingController myController1 = new TextEditingController();
@@ -97,6 +99,11 @@ class _ItemListState extends State<ItemList> {
             return FlatButton(
               onPressed: (){
                 notes.deleteAt(currIndex);
+                global.markedDateMap.remove(
+                    notes.getAt(currIndex).deadlinedate,
+                    Event(date:notes.getAt(currIndex).deadlinedate,
+                        title: notes.getAt(currIndex).title )
+                );
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => ListPage()),
@@ -124,37 +131,6 @@ class _ItemListState extends State<ItemList> {
             );
           }
 
-          markasCompleteButton() {
-            return FlatButton(
-              onPressed: (){
-                print(currIndex);
-                noteBloc.deleteNoteById(currIndex);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ListPage()),
-                );
-              },
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Icon(
-                    Icons.check,
-                    color: Colors.blueGrey[200],
-                  ),
-                  SizedBox(
-                    width: 20.0,
-                  ),
-                  Text(
-                    'Mark as Complete',
-                    style: TextStyle(
-                      color: Colors.blueGrey[200],
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }
           return MaterialApp(
             theme: ThemeData(
               brightness: Brightness.light,
@@ -183,7 +159,6 @@ class _ItemListState extends State<ItemList> {
                   SizedBox(
                     height: 40.0,
                   ),
-                  markasCompleteButton(),
                   SizedBox(
                     height: 40.0,
                   ),

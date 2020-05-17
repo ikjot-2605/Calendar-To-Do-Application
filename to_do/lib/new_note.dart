@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:todo/day_tasks.dart';
 import 'bloc.dart';
 import 'model/note.dart';
+import 'package:todo/globals.dart' as global;
+import 'package:flutter_calendar_carousel/classes/event.dart';
 class NewNote extends StatefulWidget {
   @override
   _NewNoteState createState() => _NewNoteState();
 }
 
 class _NewNoteState extends State<NewNote> {
+  bool _visible = false;
   final NoteBloc noteBloc = NoteBloc();
   TextEditingController myController = new TextEditingController();
   int dateselected=0;
@@ -40,33 +44,35 @@ class _NewNoteState extends State<NewNote> {
             print("YOU'VE REACHED");
             print(dateselected);
             print(myController.text+" "+selectedDate.toString());
-              if(dateselected==1&&myController.text!=null||myController.text!=''||selectedDate.difference(DateTime.now()).inMicroseconds<0) {
-                print("TATTI");
+              if(dateselected==1&&myController.text!=null&&myController.text!='') {
                 Note note = new Note(myController.text,selectedDate,0);
                 noteBloc.addNote(note);
+                global.markedDateMap.add(
+                  note.deadlinedate,
+                  Event(
+                    date: note.deadlinedate,
+                    title: note.title
+                  )
+                );
                 Navigator.pop(context);
+
               }
               else{
                 showDialog(context: context,
                 builder: (_) =>new AlertDialog(
-                  title: new Text('Hellllloo'),
-                  content: new Text('You fool you made a mistake'),
-                  backgroundColor: Color.fromARGB(220, 117, 218 ,255),
+                  title: new Text('Error'),
+                  content: new Text('Please ensure that you have selected a deadline and also entered some todo-title'),
+                  backgroundColor: Color.fromARGB(226, 117, 218 ,255),
                   shape:
                   RoundedRectangleBorder(borderRadius: new BorderRadius.circular(15)),
                   actions: <Widget>[
                     new FlatButton(
                       child: new Text("OKAY"),
-                      textColor: Colors.greenAccent,
+                      textColor: Colors.black,
                       onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                    new FlatButton(
-                      child: Text("NOT OKAY"),
-                      textColor: Colors.redAccent,
-                      onPressed: () {
-                        Navigator.pop(context);
+                        setState(() {
+                          Navigator.of(context, rootNavigator: true).pop('dialog');
+                        });
                       },
                     ),
                   ],
@@ -97,6 +103,18 @@ class _NewNoteState extends State<NewNote> {
             ),
           ),
           SizedBox(height: 20.0,),
+          Visibility(
+            visible: _visible,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "Deadline: "+selectedDate.toString().substring(0,10),
+                style:TextStyle(
+                  letterSpacing: 2.0
+                ),
+              ),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: FlatButton(
@@ -104,6 +122,7 @@ class _NewNoteState extends State<NewNote> {
                 _selectDate(context);
                 setState(() {
                   dateselected=1;
+                  _visible = true;
                 });
               },
               child: Text(

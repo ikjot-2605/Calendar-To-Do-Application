@@ -6,10 +6,13 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'model/note.dart';
 import 'dart:ui' as ui;
 import 'package:flutter/rendering.dart';
+import 'package:flare_flutter/flare_actor.dart';
+
+Future<dynamic> a(int b,String c,String d,String e){}
 void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
   RenderErrorBox.backgroundColor = Colors.transparent;
   RenderErrorBox.textStyle = ui.TextStyle(color: Colors.transparent);
-  WidgetsFlutterBinding.ensureInitialized();
   final appDocumentDir = await getApplicationDocumentsDirectory();
   Hive.init(appDocumentDir.path);
   Hive.registerAdapter(NoteAdapter());
@@ -46,7 +49,7 @@ class _MyAppState extends State<MyApp> {
           // we still need to return something before the Future completes.
           else
             return Scaffold(
-              backgroundColor: Colors.black,
+              body: FlareActor('assets/loading.flr'),
             );
         },
       ),

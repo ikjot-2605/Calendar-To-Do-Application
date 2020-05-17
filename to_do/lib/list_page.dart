@@ -1,31 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
-import 'package:todo/main.dart';
+
 import 'model/note.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'item_view.dart';
 import 'package:todo/bloc.dart';
 import 'package:todo/note_dao.dart';
-import 'note_repository.dart';
 import 'package:todo/new_note.dart';
+import 'package:todo/globals.dart' as global;
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart' show CalendarCarousel;
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/classes/event_list.dart';
+import 'day_tasks.dart';
 TextEditingController myController = new TextEditingController();
 int currIndex=0;
 final DismissDirection _dismissDirection = DismissDirection.horizontal;
 final NoteBloc noteBloc = NoteBloc();
+final NoteDao noteDao=NoteDao();
 class ListPage extends StatefulWidget {
   @override
   _ListPageState createState() => _ListPageState();
 }
 
 class _ListPageState extends State<ListPage> {
+  List<Note> list=noteDao.getAll();
   String date = DateTime.now().toString().substring(0, 10);
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    print(global.markedDateMap);
     return Scaffold(
         backgroundColor: Colors.white,
         floatingActionButton: FloatingActionButton(
@@ -57,7 +61,10 @@ class _ListPageState extends State<ListPage> {
           children: <Widget>[
             CalendarCarousel<Event>(
               onDayPressed: (DateTime date, List<Event> events) {
-                print(date);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => DayTasks(date))
+                );
               },
               weekendTextStyle: TextStyle(
                 color: Colors.red,
@@ -92,8 +99,17 @@ class _ListPageState extends State<ListPage> {
               },
               weekFormat: false,
               height: 460.0,
+              markedDatesMap: global.markedDateMap,
+              markedDateShowIcon: true,
               selectedDateTime: DateTime.now(),
               daysHaveCircularBorder: false, /// null for not rendering any border, true for circular border, false for rectangular border
+            ),
+            Text(
+              "Today's tasks",
+              style: TextStyle(
+                color: Colors.blue,
+                letterSpacing: 1.5,
+              ),
             ),
             ValueListenableBuilder(
               valueListenable: Hive.box('notes').listenable(),
@@ -138,6 +154,11 @@ class _ListPageState extends State<ListPage> {
                     the card is dismissed
                     */
                                 noteBloc.deleteNoteById(index);
+                                global.markedDateMap.remove(
+                                    notes.getAt(index).deadlinedate,
+                                    Event(date:notes.getAt(index).deadlinedate,
+                                        title: notes.getAt(index).title )
+                                );
                               },
                               direction: _dismissDirection,
                               key: new ObjectKey(notes.getAt(index)),

@@ -27,6 +27,10 @@ class NoteBloc {
 
   }
 
+  getAll(){
+    _noteRepository.getAll();
+  }
+
   addNote(Note note) async {
     await _noteRepository.insertNote(note);
     getNotes();

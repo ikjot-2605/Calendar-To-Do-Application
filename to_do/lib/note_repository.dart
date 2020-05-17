@@ -6,6 +6,8 @@ class NoteRepository {
 
   List<Note> getAllNotes() => todoDao.getNotes();
 
+  List<Note> getAll() => todoDao.getAll();
+
   void insertNote(Note note) => todoDao.createNote(note);
 
   void updateNote(int id,Note note) => todoDao.updateNote(id,note);
