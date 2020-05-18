@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import '../model/note.dart';
 import 'package:hive/hive.dart';
