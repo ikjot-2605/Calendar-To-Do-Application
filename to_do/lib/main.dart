@@ -16,15 +16,35 @@ void main() async{
   final appDocumentDir = await getApplicationDocumentsDirectory();
   Hive.init(appDocumentDir.path);
   Hive.registerAdapter(NoteAdapter());
-  runApp(MaterialApp(
-    theme: ThemeData(
-      brightness: Brightness.light,
-      backgroundColor: Colors.white,
-    ),
-    home: MyApp(),
-
-  ));
+  runApp(MyHome());
 }
+class MyHome extends StatefulWidget {
+  @override
+  _MyHomeState createState() => _MyHomeState();
+}
+
+class _MyHomeState extends State<MyHome> {
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },
+      child: MaterialApp(
+        theme: ThemeData(
+          brightness: Brightness.light,
+          backgroundColor: Colors.white,
+        ),
+        home: MyApp(),
+
+      ),
+    );
+  }
+}
+
 
 class MyApp extends StatefulWidget {
   @override

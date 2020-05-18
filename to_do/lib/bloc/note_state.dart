@@ -10,10 +10,10 @@ class NoteInitial extends NoteState{
 }
 
 class NoteObtained extends NoteState {
-  final Note note;
-  const NoteObtained(this.note);
+  final List<Note> list;
+  const NoteObtained(this.list);
   @override
-  List<Object> get props => [note];
+  List<Object> get props => [list];
 }
 
 class NoteCreated extends NoteState {

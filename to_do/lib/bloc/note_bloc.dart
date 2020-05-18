@@ -15,15 +15,8 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
 
   @override
   Stream<NoteState> mapEventToState(
-    NoteEvent event,
-  ) async* {
-    if (event is GetNote) {
-      // Outputting a state from the asynchronous generator
-      int index=event.index;
-      Note note = notesBox.getAt(index);
-      yield NoteObtained(note);
-      print('YOU WANTED THE NOTE ${note.title}');
-    }
+      NoteEvent event,
+      ) async* {
     if(event is MakeNote){
       String title=event.title;
       DateTime deadlinedate=event.deadlinedate;
@@ -47,4 +40,12 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
       yield NoteCreated(note);
     }
   }
+  List<Note> getAll(){
+    List<Note> list=[];
+    int length=notesBox.length;
+    for(int i=0;i<length;i++){
+      list.add(notesBox.getAt(i));
+    }
+    return list;
   }
+}

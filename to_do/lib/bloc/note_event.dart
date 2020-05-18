@@ -3,14 +3,6 @@ part of 'note_bloc.dart';
 abstract class NoteEvent extends Equatable {
   const NoteEvent();
 }
-class GetNote extends NoteEvent {
-  final int index;
-
-  const GetNote(this.index);
-
-  @override
-  List<Object> get props => [index];
-}
 
 class MakeNote extends NoteEvent {
   final String title;

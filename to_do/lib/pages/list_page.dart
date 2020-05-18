@@ -6,7 +6,6 @@ import '../model/note.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'item_view.dart';
-import 'package:todo/DAO_Repository/note_dao.dart';
 import 'package:todo/pages/new_note.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart'
     show CalendarCarousel;
@@ -17,7 +16,6 @@ TextEditingController myController = new TextEditingController();
 int currIndex = 0;
 final DismissDirection _dismissDirection = DismissDirection.horizontal;
 final NoteBloc noteBloc=NoteBloc();
-final NoteDao noteDao = NoteDao();
 
 class ListPage extends StatefulWidget {
   @override
@@ -30,7 +28,7 @@ class _ListPageState extends State<ListPage> {
   @override
   Widget build(BuildContext context) {
 
-    List<Note> list = noteDao.getAll();
+    List<Note> list = noteBloc.getAll();
     List<Tuple2<Note, int>> list_todisplay = [];
     for (int i = 0; i < list.length; i++) {
       if (date.toString().substring(0, 10) ==
@@ -39,7 +37,15 @@ class _ListPageState extends State<ListPage> {
       }
     }
     Widget today(){
-       return Expanded(
+      List<Note> list = noteBloc.getAll();
+      List<Tuple2<Note, int>> list_todisplay = [];
+      for (int i = 0; i < list.length; i++) {
+        if (date.toString().substring(0, 10) ==
+            list[i].deadlinedate.toString().substring(0, 10)) {
+          list_todisplay.add(Tuple2<Note, int>(list[i], i));
+        }
+      }
+      return Expanded(
         child: list_todisplay.length == 0
             ? Center(
           child: Text(
@@ -194,16 +200,16 @@ class _ListPageState extends State<ListPage> {
             ),
             thisMonthDayBorderColor: Colors.grey,
             customDayBuilder: (
-              bool isSelectable,
-              int index,
-              bool isSelectedDay,
-              bool isToday,
-              bool isPrevMonthDay,
-              TextStyle textStyle,
-              bool isNextMonthDay,
-              bool isThisMonthDay,
-              DateTime day,
-            ) {
+                bool isSelectable,
+                int index,
+                bool isSelectedDay,
+                bool isToday,
+                bool isPrevMonthDay,
+                TextStyle textStyle,
+                bool isNextMonthDay,
+                bool isThisMonthDay,
+                DateTime day,
+                ) {
               for (int i = 0; i < list.length; i++) {
                 if (day == list[i].deadlinedate) {
                   return Center(
