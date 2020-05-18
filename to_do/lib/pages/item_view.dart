@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive/hive.dart';
 import 'list_page.dart';
-import 'package:todo/globals.dart' as global;
-import 'bloc.dart';
+import '../BLoC/bloc.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
-import 'model/note.dart';
+import '../model/note.dart';
+
 bool pressed = false;
 TextEditingController myController1 = new TextEditingController();
 
@@ -35,32 +35,31 @@ class _ItemListState extends State<ItemList> {
         valueListenable: Hive.box('notes').listenable(),
         builder: (context, Box notes, _) {
           updating_field() {
-
-              return Center(
-                child: Container(
-                  height: 200.0,
-                  width: MediaQuery.of(context).size.width,
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        height: 200.0,
-                        child: Card(
-                          child: Center(
-                            child: Text(
-                              notes.getAt(currIndex).title,
-                              style: TextStyle(
-                                fontSize: 20.0,
-                                wordSpacing: 2.0,
-                              ),
+            return Center(
+              child: Container(
+                height: 200.0,
+                width: MediaQuery.of(context).size.width,
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      height: 200.0,
+                      child: Card(
+                        child: Center(
+                          child: Text(
+                            notes.getAt(currIndex).title,
+                            style: TextStyle(
+                              fontSize: 20.0,
+                              wordSpacing: 2.0,
                             ),
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              );
-                      }
+              ),
+            );
+          }
 
           updateButton() {
             return FlatButton(
@@ -97,13 +96,8 @@ class _ItemListState extends State<ItemList> {
 
           deleteButton() {
             return FlatButton(
-              onPressed: (){
+              onPressed: () {
                 notes.deleteAt(currIndex);
-                global.markedDateMap.remove(
-                    notes.getAt(currIndex).deadlinedate,
-                    Event(date:notes.getAt(currIndex).deadlinedate,
-                        title: notes.getAt(currIndex).title )
-                );
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => ListPage()),
@@ -140,10 +134,13 @@ class _ItemListState extends State<ItemList> {
               appBar: AppBar(
                 backgroundColor: Colors.white,
                 title: Text(
-                  'Task for '+notesBox.getAt(currIndex).deadlinedate.toString().substring(0,10),
-                  style: TextStyle(
-                    color: Colors.black
-                  ),
+                  'Task for ' +
+                      notesBox
+                          .getAt(currIndex)
+                          .deadlinedate
+                          .toString()
+                          .substring(0, 10),
+                  style: TextStyle(color: Colors.black),
                 ),
                 centerTitle: true,
               ),
@@ -208,16 +205,19 @@ class _updateViewState extends State<updateView> {
                       fontFamily: "Poppins",
                     ),
                   ),
-                  SizedBox(height: 50.0,),
+                  SizedBox(
+                    height: 50.0,
+                  ),
                   FlatButton(
                     onPressed: () {
-                      String updatedText=myController1.text;
-                      noteBloc.updateNote(currIndex,Note(updatedText,DateTime.now(),0));
+                      String updatedText = myController1.text;
+                      noteBloc.updateNote(
+                          currIndex, Note(updatedText, DateTime.now(), 0));
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => ListPage()),
                       );
-                      myController1.text='';
+                      myController1.text = '';
                     },
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,

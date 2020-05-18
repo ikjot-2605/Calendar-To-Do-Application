@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:todo/day_tasks.dart';
-import 'bloc.dart';
-import 'model/note.dart';
-import 'package:todo/globals.dart' as global;
+import 'package:todo/pages/day_tasks.dart';
+import '../BLoC/bloc.dart';
+import '../model/note.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
+
 class NewNote extends StatefulWidget {
   @override
   _NewNoteState createState() => _NewNoteState();
@@ -13,7 +13,7 @@ class _NewNoteState extends State<NewNote> {
   bool _visible = false;
   final NoteBloc noteBloc = NoteBloc();
   TextEditingController myController = new TextEditingController();
-  int dateselected=0;
+  int dateselected = 0;
   DateTime selectedDate = DateTime.now();
   Future<Null> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
@@ -26,58 +26,55 @@ class _NewNoteState extends State<NewNote> {
         selectedDate = picked;
       });
   }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
         backgroundColor: Colors.white,
         title: new Text(
-            'Make a new note',
-            style: TextStyle(
-              color: Colors.black,
-            ),
+          'Make a new note',
+          style: TextStyle(
+            color: Colors.black,
+          ),
         ),
         centerTitle: true,
         actions: <Widget>[
-          new IconButton(icon: const Icon(Icons.save),
+          new IconButton(
+            icon: const Icon(Icons.save),
             onPressed: () {
-            print("YOU'VE REACHED");
-            print(dateselected);
-            print(myController.text+" "+selectedDate.toString());
-              if(dateselected==1&&myController.text!=null&&myController.text!='') {
-                Note note = new Note(myController.text,selectedDate,0);
+              print("YOU'VE REACHED");
+              print(dateselected);
+              print(myController.text + " " + selectedDate.toString());
+              if (dateselected == 1 &&
+                  myController.text != null &&
+                  myController.text != '') {
+                Note note = new Note(myController.text, selectedDate, 0);
                 noteBloc.addNote(note);
-                global.markedDateMap.add(
-                  note.deadlinedate,
-                  Event(
-                    date: note.deadlinedate,
-                    title: note.title
-                  )
-                );
                 Navigator.pop(context);
-
-              }
-              else{
-                showDialog(context: context,
-                builder: (_) =>new AlertDialog(
-                  title: new Text('Error'),
-                  content: new Text('Please ensure that you have selected a deadline and also entered some todo-title'),
-                  backgroundColor: Color.fromARGB(226, 117, 218 ,255),
-                  shape:
-                  RoundedRectangleBorder(borderRadius: new BorderRadius.circular(15)),
-                  actions: <Widget>[
-                    new FlatButton(
-                      child: new Text("OKAY"),
-                      textColor: Colors.black,
-                      onPressed: () {
-                        setState(() {
-                          Navigator.of(context, rootNavigator: true).pop('dialog');
-                        });
-                      },
-                    ),
-                  ],
-                )
-                );
+              } else {
+                showDialog(
+                    context: context,
+                    builder: (_) => new AlertDialog(
+                          title: new Text('Error'),
+                          content: new Text(
+                              'Please ensure that you have selected a deadline and also entered some todo-title'),
+                          backgroundColor: Color.fromARGB(226, 117, 218, 255),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(15)),
+                          actions: <Widget>[
+                            new FlatButton(
+                              child: new Text("OKAY"),
+                              textColor: Colors.black,
+                              onPressed: () {
+                                setState(() {
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pop('dialog');
+                                });
+                              },
+                            ),
+                          ],
+                        ));
               }
             },
             color: Colors.black,
@@ -91,7 +88,10 @@ class _NewNoteState extends State<NewNote> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: new ListTile(
-              leading: const Icon(Icons.border_color,color: Colors.blueGrey,),
+              leading: const Icon(
+                Icons.border_color,
+                color: Colors.blueGrey,
+              ),
               title: new TextField(
                 controller: myController,
                 keyboardType: TextInputType.multiline,
@@ -102,26 +102,26 @@ class _NewNoteState extends State<NewNote> {
               ),
             ),
           ),
-          SizedBox(height: 20.0,),
+          SizedBox(
+            height: 20.0,
+          ),
           Visibility(
             visible: _visible,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                "Deadline: "+selectedDate.toString().substring(0,10),
-                style:TextStyle(
-                  letterSpacing: 2.0
-                ),
+                "Deadline: " + selectedDate.toString().substring(0, 10),
+                style: TextStyle(letterSpacing: 2.0),
               ),
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: FlatButton(
-              onPressed: (){
+              onPressed: () {
                 _selectDate(context);
                 setState(() {
-                  dateselected=1;
+                  dateselected = 1;
                   _visible = true;
                 });
               },

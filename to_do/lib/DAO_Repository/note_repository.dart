@@ -1,4 +1,4 @@
-import 'package:todo/note_dao.dart';
+import 'package:todo/DAO_Repository/note_dao.dart';
 import 'package:todo/model/note.dart';
 
 class NoteRepository {

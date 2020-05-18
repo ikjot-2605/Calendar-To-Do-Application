@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:todo/model/note.dart';
-import 'bloc.dart';
-import 'package:todo/note_dao.dart';
+import '../BLoC/bloc.dart';
+import 'package:todo/DAO_Repository/note_dao.dart';
 import 'item_view.dart';
+import 'package:tuple/tuple.dart';
 final NoteBloc noteBloc = NoteBloc();
 final NoteDao noteDao = NoteDao();
 int currIndex=0;
@@ -22,12 +23,13 @@ class _DayTasksState extends State<DayTasks> {
   @override
   Widget build(BuildContext context) {
     List<Note> list=noteDao.getAll();
-    List<Note> list_todisplay=[];
+    List<Tuple2<Note,int>> list_todisplay=[];
     final date=widget.date;
     print(list);
     for(int i=0;i<list.length;i++){
-      if(date==list[i].deadlinedate){
-        list_todisplay.add(list[i]);
+      print(date);print(list[i].deadlinedate);
+      if(date.toString().substring(0,10)==list[i].deadlinedate.toString().substring(0,10)){
+        list_todisplay.add(Tuple2<Note,int>(list[i],i));
       }
     }
     return Scaffold(
@@ -97,19 +99,22 @@ class _DayTasksState extends State<DayTasks> {
                       leading: InkWell(
                         onTap: () {
                           //Reverse the value
-                          list_todisplay[index].isDone = 1;
+                        setState(() {
+                          list_todisplay[index].item1.isDone = 1;
                           /*
                             Another magic.
                             This will update Todo isDone with either
                             completed or not
                           */
-                          noteBloc.updateNote(currIndex,list_todisplay[currIndex]);
+                          noteBloc.updateNote(list_todisplay[index].item2,list_todisplay[index].item1);
+                        });
+                          print("Congratulations on finishing your task");
                         },
                         child: Container(
                           //decoration: BoxDecoration(),
                           child: Padding(
                             padding: const EdgeInsets.all(15.0),
-                            child: list_todisplay[index].isDone==1
+                            child: list_todisplay[index].item1.isDone==1
                                 ? Icon(
                               Icons.done,
                               size: 26.0,
@@ -124,12 +129,12 @@ class _DayTasksState extends State<DayTasks> {
                         ),
                       ),
                       title: Text(
-                        list_todisplay[index].title,
+                        list_todisplay[index].item1.title,
                         style: TextStyle(
                             fontSize: 16.5,
                             fontFamily: 'RobotoMono',
                             fontWeight: FontWeight.w500,
-                            decoration: list_todisplay[index].isDone==1
+                            decoration: list_todisplay[index].item1.isDone==1
                                 ? TextDecoration.lineThrough
                                 : TextDecoration.none),
                       ),

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:todo/model/note.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive/hive.dart';
-import 'list_page.dart';
+import '../pages/list_page.dart';
 import 'package:flutter_calendar_carousel/classes/event_list.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
 class NoteDao {

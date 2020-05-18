@@ -10,7 +10,8 @@ class NotificationPlugin {
 
   void _initializeNotifications() {
     _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    final initializationSettingsAndroid = AndroidInitializationSettings('secondary_icon');
+    final initializationSettingsAndroid =
+        AndroidInitializationSettings('secondary_icon');
     final initializationSettingsIOS = IOSInitializationSettings();
     final initializationSettings = InitializationSettings(
       initializationSettingsAndroid,
@@ -28,7 +29,8 @@ class NotificationPlugin {
     }
   }
 
-  Future<void> showDailtAtTime(Time time, int id, String title, String description) async {
+  Future<void> showDailtAtTime(
+      Time time, int id, String title, String description) async {
     final androidPlatformChannelSpecifics = AndroidNotificationDetails(
       'show weekly channel id',
       'show weekly channel name',
@@ -48,7 +50,8 @@ class NotificationPlugin {
     );
   }
 
-  Future<void> showDailyAtTime(Time time, int id, String title, String description) async {
+  Future<void> showDailyAtTime(
+      Time time, int id, String title, String description) async {
     final androidPlatformChannelSpecifics = AndroidNotificationDetails(
       'show weekly channel id',
       'show weekly channel name',
@@ -69,7 +72,8 @@ class NotificationPlugin {
   }
 
   Future<List<PendingNotificationRequest>> getScheduledNotifications() async {
-    final pendingNotifications = await _flutterLocalNotificationsPlugin.pendingNotificationRequests();
+    final pendingNotifications =
+        await _flutterLocalNotificationsPlugin.pendingNotificationRequests();
     return pendingNotifications;
   }
 
@@ -80,7 +84,9 @@ class NotificationPlugin {
   Future<void> cancelAllNotifications() async {
     await _flutterLocalNotificationsPlugin.cancelAll();
   }
-  Future<void> scheduleAllNotifications(List<NotificationData> notifications) async {
+
+  Future<void> scheduleAllNotifications(
+      List<NotificationData> notifications) async {
     for (final notification in notifications) {
       await showDailyAtTime(
         Time(23, 59),
