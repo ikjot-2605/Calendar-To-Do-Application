@@ -27,8 +27,10 @@ class _DayTasksState extends State<DayTasks> {
     final date=widget.date;
     print(list);
     for(int i=0;i<list.length;i++){
-      print(date);print(list[i].deadlinedate);
       if(date.toString().substring(0,10)==list[i].deadlinedate.toString().substring(0,10)){
+        print(list[i].title);
+        print(i);
+        print('THIS IS IT');
         list_todisplay.add(Tuple2<Note,int>(list[i],i));
       }
     }
@@ -59,11 +61,16 @@ class _DayTasksState extends State<DayTasks> {
             child: FlatButton(
               onPressed: (){
                 setState(() {
-                  currIndex=index;
+                  currIndex=list_todisplay[index].item2;
                 });
+                print(list_todisplay);
+                print('index');
+                print(currIndex);
+                print('index in list_todisplay');
+                print(index);
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ItemView()),
+                  MaterialPageRoute(builder: (context) => ItemView(currIndex)),
                 );
               },
               child: Dismissible(

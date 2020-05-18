@@ -10,6 +10,8 @@ bool pressed = false;
 TextEditingController myController1 = new TextEditingController();
 
 class ItemView extends StatefulWidget {
+  final int index;
+  ItemView(this.index, {Key key}) : super(key: key);
   @override
   _ItemViewState createState() => _ItemViewState();
 }
@@ -18,11 +20,13 @@ class _ItemViewState extends State<ItemView> {
   final NoteBloc noteBloc = NoteBloc();
   @override
   Widget build(BuildContext context) {
-    return ItemList();
+    return ItemList(widget.index);
   }
 }
 
 class ItemList extends StatefulWidget {
+  final int index;
+  ItemList(this.index, {Key key}) : super(key: key);
   @override
   _ItemListState createState() => _ItemListState();
 }
@@ -30,6 +34,7 @@ class ItemList extends StatefulWidget {
 class _ItemListState extends State<ItemList> {
   @override
   Widget build(BuildContext context) {
+    int currIndex=widget.index;
     final notesBox = Hive.box('notes');
     return ValueListenableBuilder(
         valueListenable: Hive.box('notes').listenable(),
@@ -210,9 +215,10 @@ class _updateViewState extends State<updateView> {
                   ),
                   FlatButton(
                     onPressed: () {
+                      DateTime datee=notesBox.getAt(currIndex).deadlinedate;
                       String updatedText = myController1.text;
                       noteBloc.updateNote(
-                          currIndex, Note(updatedText, DateTime.now(), 0));
+                          currIndex, Note(updatedText, datee, 0));
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => ListPage()),

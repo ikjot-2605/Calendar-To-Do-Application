@@ -10,7 +10,7 @@ import 'package:todo/DAO_Repository/note_dao.dart';
 import 'package:todo/pages/new_note.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart' show CalendarCarousel;
 import 'day_tasks.dart';
-
+import 'package:tuple/tuple.dart';
 TextEditingController myController = new TextEditingController();
 int currIndex = 0;
 final DismissDirection _dismissDirection = DismissDirection.horizontal;
@@ -23,11 +23,18 @@ class ListPage extends StatefulWidget {
 }
 
 class _ListPageState extends State<ListPage> {
-  List<Note> list = noteDao.getAll();
   String date = DateTime.now().toString().substring(0, 10);
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    List<Note> list = noteDao.getAll();
+    List<Tuple2<Note,int>> list_todisplay=[];
+    for(int i=0;i<list.length;i++){
+      print(date);print(list[i].deadlinedate);
+      if(date.toString().substring(0,10)==list[i].deadlinedate.toString().substring(0,10)){
+        list_todisplay.add(Tuple2<Note,int>(list[i],i));
+      }
+    }
     return Scaffold(
       backgroundColor: Colors.white,
       floatingActionButton: FloatingActionButton(
@@ -113,24 +120,30 @@ class _ListPageState extends State<ListPage> {
             valueListenable: Hive.box('notes').listenable(),
             builder: (context, Box notes, _) {
               return Expanded(
-                child: ListView.builder(
+                child:list_todisplay.length==0?Center(
+                  child: Text(
+                    "No Tasks for "+date.toString().substring(0,10),
+                    style: TextStyle(
+                      color: Colors.greenAccent,
+                      letterSpacing: 2.0,
+                    ),
+                  ),
+                ):ListView.builder(
                   scrollDirection: Axis.vertical,
-                  itemCount: notes.length,
+                  itemCount: list_todisplay.length,
                   itemBuilder: (BuildContext context, int index) {
-                    final note = notes.getAt(index);
                     return Padding(
                       padding: const EdgeInsets.all(2.0),
                       child: Container(
                         height: 70.0,
                         child: FlatButton(
-                          onPressed: () {
+                          onPressed: (){
                             setState(() {
-                              currIndex = index;
+                              currIndex=list_todisplay[index].item2;
                             });
                             Navigator.push(
                               context,
-                              MaterialPageRoute(
-                                  builder: (context) => ItemView()),
+                              MaterialPageRoute(builder: (context) => ItemView(currIndex)),
                             );
                           },
                           child: Dismissible(
@@ -155,11 +168,10 @@ class _ListPageState extends State<ListPage> {
                               noteBloc.deleteNoteById(index);
                             },
                             direction: _dismissDirection,
-                            key: new ObjectKey(notes.getAt(index)),
+                            key: new ObjectKey(list_todisplay[index]),
                             child: Card(
                                 shape: RoundedRectangleBorder(
-                                  side: BorderSide(
-                                      color: Colors.grey[200], width: 0.5),
+                                  side: BorderSide(color: Colors.grey[200], width: 0.5),
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                                 color: Colors.white,
@@ -167,43 +179,44 @@ class _ListPageState extends State<ListPage> {
                                   leading: InkWell(
                                     onTap: () {
                                       //Reverse the value
-                                      notes.getAt(index).isDone = 1;
-                                      /*
+                                      setState(() {
+                                        list_todisplay[index].item1.isDone = 1;
+                                        /*
                             Another magic.
                             This will update Todo isDone with either
                             completed or not
                           */
-                                      noteBloc.updateNote(
-                                          currIndex, notes.getAt(currIndex));
+                                        noteBloc.updateNote(list_todisplay[index].item2,list_todisplay[index].item1);
+                                      });
+                                      print("Congratulations on finishing your task");
                                     },
                                     child: Container(
                                       //decoration: BoxDecoration(),
                                       child: Padding(
                                         padding: const EdgeInsets.all(15.0),
-                                        child: notes.getAt(index).isDone == 1
+                                        child: list_todisplay[index].item1.isDone==1
                                             ? Icon(
-                                                Icons.done,
-                                                size: 26.0,
-                                                color: Colors.indigoAccent,
-                                              )
+                                          Icons.done,
+                                          size: 26.0,
+                                          color: Colors.indigoAccent,
+                                        )
                                             : Icon(
-                                                Icons.check_box_outline_blank,
-                                                size: 26.0,
-                                                color: Colors.tealAccent,
-                                              ),
+                                          Icons.check_box_outline_blank,
+                                          size: 26.0,
+                                          color: Colors.tealAccent,
+                                        ),
                                       ),
                                     ),
                                   ),
                                   title: Text(
-                                    notes.getAt(index).title,
+                                    list_todisplay[index].item1.title,
                                     style: TextStyle(
                                         fontSize: 16.5,
                                         fontFamily: 'RobotoMono',
                                         fontWeight: FontWeight.w500,
-                                        decoration:
-                                            notes.getAt(index).isDone == 1
-                                                ? TextDecoration.lineThrough
-                                                : TextDecoration.none),
+                                        decoration: list_todisplay[index].item1.isDone==1
+                                            ? TextDecoration.lineThrough
+                                            : TextDecoration.none),
                                   ),
                                 )),
                           ),
@@ -220,53 +233,6 @@ class _ListPageState extends State<ListPage> {
     );
   }
 
-  _buildListView() {
-    final notesBox = Hive.box('notes');
-    print(notesBox.toMap().length);
-    return ValueListenableBuilder(
-      valueListenable: Hive.box('notes').listenable(),
-      builder: (context, Box notes, _) {
-        return ListView.builder(
-          itemCount: notesBox.length,
-          itemBuilder: (BuildContext context, int index) {
-            final note = notesBox.getAt(index);
-            return Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Container(
-                height: 70.0,
-                child: FlatButton(
-                  onPressed: () {
-                    setState(() {
-                      currIndex = index;
-                    });
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ItemView()),
-                    );
-                  },
-                  child: Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Center(
-                        child: Text(
-                          notes.getAt(index).title,
-                          style: TextStyle(
-                            letterSpacing: 0.4,
-                            fontSize: 20.0,
-                            fontFamily: 'poppins',
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
 }
 /*
 * Dismissible(
