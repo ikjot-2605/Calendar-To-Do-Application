@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive/hive.dart';
 import 'list_page.dart';
-import '../BLoC/bloc.dart';
+import 'package:todo/bloc/note_bloc.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import '../model/note.dart';
 
@@ -17,7 +17,6 @@ class ItemView extends StatefulWidget {
 }
 
 class _ItemViewState extends State<ItemView> {
-  final NoteBloc noteBloc = NoteBloc();
   @override
   Widget build(BuildContext context) {
     return ItemList(widget.index);
@@ -217,8 +216,8 @@ class _updateViewState extends State<updateView> {
                     onPressed: () {
                       DateTime datee=notesBox.getAt(currIndex).deadlinedate;
                       String updatedText = myController1.text;
-                      noteBloc.updateNote(
-                          currIndex, Note(updatedText, datee, 0));
+                      final NoteBloc noteBloc = NoteBloc();
+                      noteBloc.add(UpdateNote(Note(updatedText, datee, 0),currIndex));
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => ListPage()),

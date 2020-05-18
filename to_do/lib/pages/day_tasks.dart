@@ -3,11 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:todo/model/note.dart';
-import '../BLoC/bloc.dart';
 import 'package:todo/DAO_Repository/note_dao.dart';
 import 'item_view.dart';
 import 'package:tuple/tuple.dart';
-final NoteBloc noteBloc = NoteBloc();
+import 'package:todo/bloc/note_bloc.dart';
 final NoteDao noteDao = NoteDao();
 int currIndex=0;
 final DismissDirection _dismissDirection = DismissDirection.horizontal;
@@ -92,7 +91,8 @@ class _DayTasksState extends State<DayTasks> {
                     delete Todo item by ID whenever
                     the card is dismissed
                     */
-                  noteBloc.deleteNoteById(index);
+                  final NoteBloc noteBloc = NoteBloc();
+                  noteBloc.add(DeleteNote(list_todisplay[index].item2));
                 },
                 direction: _dismissDirection,
                 key: new ObjectKey(list_todisplay[index]),
@@ -107,13 +107,11 @@ class _DayTasksState extends State<DayTasks> {
                         onTap: () {
                           //Reverse the value
                         setState(() {
-                          list_todisplay[index].item1.isDone = 1;
-                          /*
-                            Another magic.
-                            This will update Todo isDone with either
-                            completed or not
-                          */
-                          noteBloc.updateNote(list_todisplay[index].item2,list_todisplay[index].item1);
+                          list_todisplay[index]
+                              .item1
+                              .isDone = 1;
+                          final NoteBloc noteBloc = NoteBloc();
+                          noteBloc.add(UpdateNote(list_todisplay[index].item1,list_todisplay[index].item2));
                         });
                           print("Congratulations on finishing your task");
                         },
