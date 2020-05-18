@@ -28,7 +28,7 @@ class _ListPageState extends State<ListPage> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
+    Hive.openBox('notes');
     List<Note> list = noteBloc.getAll();
     List<Tuple2<Note, int>> list_todisplay = [];
     for (int i = 0; i < list.length; i++) {

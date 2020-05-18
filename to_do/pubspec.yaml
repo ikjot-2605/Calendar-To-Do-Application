@@ -24,7 +24,7 @@ dependencies:
   hive_flutter: ^0.3.0+2
   path_provider: ^1.6.7
   flare_flutter: ^2.0.3
-  flutter_local_notifications: ^1.4.3
+  flutter_local_notifications:
   tuple: ^1.0.3
   flutter_bloc: ^4.0.0
   equatable: ^1.1.1

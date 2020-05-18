@@ -63,10 +63,21 @@ class _MyAppState extends State<MyApp> {
         onSelectNotification: selectnotif);
   }
   shownotification() async{
-    var android=new AndroidNotificationDetails('channelId', 'channelName', 'channelDescription');
-    var ios=new IOSNotificationDetails();
-    var platform=new NotificationDetails(android, ios);
-    await flutterLocalNotificationsPlugin.show(0, 'HI', 'Notification', platform);
+    var time = Time(08, 0, 0);
+    var androidPlatformChannelSpecifics =
+    AndroidNotificationDetails('repeatDailyAtTime channel id',
+        'repeatDailyAtTime channel name', 'repeatDailyAtTime description');
+    var iOSPlatformChannelSpecifics =
+    IOSNotificationDetails();
+    var platformChannelSpecifics = NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.showDailyAtTime(
+        0,
+        'show daily title',
+        'Daily notification shown at approximately ',
+        time,
+        platformChannelSpecifics);
+
   }
   Future selectnotif(String payload) async{
     await Navigator.push(
