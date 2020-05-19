@@ -3,13 +3,18 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive/hive.dart';
 import 'list_page.dart';
 import 'package:todo/bloc/note_bloc.dart';
-import 'package:flutter_calendar_carousel/classes/event.dart';
 import '../model/note.dart';
+
+//this page is used to update tasks
+//this variable checks if a task is complete, if yes, then it doesn't show mark as complete button, if not, it shows the mark complete button
 bool _visible;
 bool pressed = false;
 TextEditingController myController1 = new TextEditingController();
+//checks if task is done
 int done;
+
 class ItemView extends StatefulWidget {
+  //used to get the particular index item selected by user
   final int index;
   ItemView(this.index, {Key key}) : super(key: key);
   @override
@@ -33,11 +38,15 @@ class ItemList extends StatefulWidget {
 class _ItemListState extends State<ItemList> {
   @override
   Widget build(BuildContext context) {
-    int currIndex=widget.index;
+    //obtaining index in the box
+    int currIndex = widget.index;
     final notesBox = Hive.box('notes');
-    done=notesBox.getAt(currIndex).isDone;
-    if(done==0)_visible=true;
-    else _visible=false;
+    done = notesBox.getAt(currIndex).isDone;
+    //checking if done
+    if (done == 0)
+      _visible = true;
+    else
+      _visible = false;
     return ValueListenableBuilder(
         valueListenable: Hive.box('notes').listenable(),
         builder: (context, Box notes, _) {
@@ -68,6 +77,7 @@ class _ItemListState extends State<ItemList> {
             );
           }
 
+          //buttons
           updateButton() {
             return FlatButton(
               onPressed: () {
@@ -100,15 +110,15 @@ class _ItemListState extends State<ItemList> {
               ),
             );
           }
+
           markCompleteButton() {
             return Visibility(
               visible: _visible,
               child: FlatButton(
                 onPressed: () {
                   setState(() {
-                    notesBox.getAt(currIndex).isDone=1;
-                    pressed = true;
-                    _visible=!_visible;
+                    notesBox.getAt(currIndex).isDone = 1;
+                    _visible = !_visible;
                   });
                 },
                 child: Row(
@@ -133,7 +143,6 @@ class _ItemListState extends State<ItemList> {
               ),
             );
           }
-
 
           deleteButton() {
             return FlatButton(
@@ -216,10 +225,12 @@ class updateView extends StatefulWidget {
 }
 
 class _updateViewState extends State<updateView> {
+  //this bool decides if deadline date has been selected, if not then it does not display
   bool _visible = false;
   TextEditingController myController = new TextEditingController();
   int dateselected = 0;
   DateTime selectedDate = DateTime.now();
+  //date select function default
   Future<Null> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
         context: context,
@@ -248,41 +259,38 @@ class _updateViewState extends State<updateView> {
           new IconButton(
             icon: const Icon(Icons.save),
             onPressed: () {
-              print("YOU'VE REACHED");
-              print(dateselected);
-              print(myController.text + " " + selectedDate.toString());
+              //processing validations
               if (dateselected == 1 &&
                   myController.text != null &&
                   myController.text != '') {
                 final NoteBloc noteBloc = NoteBloc();
-                noteBloc.add(UpdateNote(Note(myController.text,selectedDate,done),currIndex));
+                noteBloc.add(UpdateNote(
+                    Note(myController.text, selectedDate, done), currIndex));
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) =>
-                        ListPage())
-                );
+                    MaterialPageRoute(builder: (context) => ListPage()));
               } else {
                 showDialog(
                     context: context,
                     builder: (_) => new AlertDialog(
-                      title: new Text('Error'),
-                      content: new Text(
-                          'Please ensure that you have selected a deadline and also entered some todo-title'),
-                      backgroundColor: Color.fromARGB(226, 117, 218, 255),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(15)),
-                      actions: <Widget>[
-                        new FlatButton(
-                          child: new Text("OKAY"),
-                          textColor: Colors.black,
-                          onPressed: () {
-                            setState(() {
-                              Navigator.of(context, rootNavigator: true)
-                                  .pop('dialog');
-                            });
-                          },
-                        ),
-                      ],
-                    ));
+                          title: new Text('Error'),
+                          content: new Text(
+                              'Please ensure that you have selected a deadline and also entered some todo-title'),
+                          backgroundColor: Color.fromARGB(226, 117, 218, 255),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(15)),
+                          actions: <Widget>[
+                            new FlatButton(
+                              child: new Text("OKAY"),
+                              textColor: Colors.black,
+                              onPressed: () {
+                                setState(() {
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pop('dialog');
+                                });
+                              },
+                            ),
+                          ],
+                        ));
               }
             },
             color: Colors.black,

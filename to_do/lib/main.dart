@@ -11,14 +11,17 @@ import 'package:flutter/rendering.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+//firsttime variable determines if the app is being opened for the first time. Shared preferences are used for this.
 int firsttime = 0;
 void main() async {
+  //basic hive initializations
   WidgetsFlutterBinding.ensureInitialized();
   RenderErrorBox.backgroundColor = Colors.transparent;
   RenderErrorBox.textStyle = ui.TextStyle(color: Colors.transparent);
   final appDocumentDir = await getApplicationDocumentsDirectory();
   Hive.init(appDocumentDir.path);
   Hive.registerAdapter(NoteAdapter());
+  //following code determines if app is being opened for the FirstTime or not.
   SharedPreferences prefs = await SharedPreferences.getInstance().then((value) {
     bool firstTime = value.getBool('first_time');
     if (firstTime != null && !firstTime) {
@@ -29,10 +32,8 @@ void main() async {
       value.setBool('first_time', false);
       firsttime = 1;
     }
-    if (firsttime == 0)
-      runApp(MyHome());
-    else
-      runApp(MyApp());
+    //It's run only after determining if it's the first time.
+    runApp(MyHome());
   });
 }
 
@@ -68,9 +69,11 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  //initializing notification part
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   @override
   void initState() {
+    //boilerplate for notifications in initstate
     super.initState();
     flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
     var android = new AndroidInitializationSettings('mipmap/ic_launcher');
@@ -80,13 +83,9 @@ class _MyAppState extends State<MyApp> {
         onSelectNotification: selectnotif);
   }
 
+  //notification show function
   shownotification() async {
-    int length=notesBox.length;
-    for(int i=0;i<length;i++){
-      if(notesBox.getAt(i).deadlinedate.toString().substring(0,10)==DateTime.now().toString().substring(0,10)){
-
-      }
-    }
+    //time to show daily notifications 8:00 am
     var time = Time(08, 0, 0);
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
         'repeatDailyAtTime channel id',
@@ -103,6 +102,7 @@ class _MyAppState extends State<MyApp> {
         platformChannelSpecifics);
   }
 
+  //on selecting notification, home page of app is opened
   Future selectnotif(String payload) async {
     await Navigator.push(
       context,
@@ -112,6 +112,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    //gesturedetector to prevent keyboard interference issues
     return GestureDetector(
       onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);
@@ -124,7 +125,7 @@ class _MyAppState extends State<MyApp> {
           brightness: Brightness.light,
           backgroundColor: Colors.white,
         ),
-        title: 'Hive Tutorial',
+        title: 'Todo-Hive',
         home: FutureBuilder(
           future: Hive.openBox('notes'),
           builder: (context, snapshot) {
@@ -132,18 +133,22 @@ class _MyAppState extends State<MyApp> {
               if (snapshot.hasError)
                 return Text(snapshot.error.toString());
               else {
+                //display welcome page if app opened first time after installation
+                //choose to turn on notification here
                 if (firsttime == 1) {
-                  Color gradientStart =  Color(0xffffd89b); //Change start gradient color here
+                  Color gradientStart =
+                      Color(0xffffd89b); //Change start gradient color here
                   Color gradientEnd = Color(0xff19547b);
                   return Scaffold(
                     body: Container(
+                      //basic gradient
                       decoration: new BoxDecoration(
-                        gradient: new LinearGradient(colors: [gradientStart, gradientEnd],
+                        gradient: new LinearGradient(
+                            colors: [gradientStart, gradientEnd],
                             begin: const FractionalOffset(0.5, 0.0),
                             end: const FractionalOffset(0.0, 0.5),
-                            stops: [0.0,1.0],
-                            tileMode: TileMode.clamp
-                        ),
+                            stops: [0.0, 1.0],
+                            tileMode: TileMode.clamp),
                       ),
                       child: Center(
                         child: SafeArea(
@@ -152,22 +157,30 @@ class _MyAppState extends State<MyApp> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(0.0,20.0,0.0,40.0),
+                                padding: const EdgeInsets.fromLTRB(
+                                    0.0, 20.0, 0.0, 40.0),
                                 child: Text(
                                   "Welcome To The Best To-Do App.",
-                                  style: TextStyle(fontSize: 20.0,color: Colors.white,fontFamily: 'Pacifico'),
+                                  style: TextStyle(
+                                      fontSize: 20.0,
+                                      color: Colors.white,
+                                      fontFamily: 'Pacifico'),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
                               Container(
-                                width: MediaQuery.of(context).size.width-100,
+                                width: MediaQuery.of(context).size.width - 100,
                                 child: FlatButton(
-                                  child: Text('Turn on daily notifications',style: TextStyle(color: Colors.white70),),
+                                  child: Text(
+                                    'Turn on daily notifications',
+                                    style: TextStyle(color: Colors.white70),
+                                  ),
                                   onPressed: () {
                                     shownotification();
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => ListPage()),
+                                      MaterialPageRoute(
+                                          builder: (context) => ListPage()),
                                     );
                                   },
                                 ),
@@ -178,8 +191,7 @@ class _MyAppState extends State<MyApp> {
                       ),
                     ),
                   );
-                }
-                else {
+                } else {
                   return ListPage();
                 }
               }
@@ -188,8 +200,8 @@ class _MyAppState extends State<MyApp> {
             // we still need to return something before the Future completes.
             else
               return Scaffold(
-                body: FlareActor('assets/loading.flr'),
-              );
+                  //in case of error
+                  );
           },
         ),
       ),

@@ -4,13 +4,14 @@ abstract class NoteEvent extends Equatable {
   const NoteEvent();
 }
 
+//listing out most events called throughout app
 class MakeNote extends NoteEvent {
   final String title;
   final DateTime deadlinedate;
-  const MakeNote(this.title,this.deadlinedate);
+  const MakeNote(this.title, this.deadlinedate);
 
   @override
-  List<Object> get props => [title,deadlinedate];
+  List<Object> get props => [title, deadlinedate];
 }
 
 class DeleteNote extends NoteEvent {
@@ -25,8 +26,8 @@ class DeleteNote extends NoteEvent {
 class UpdateNote extends NoteEvent {
   final Note note;
   final int index;
-  const UpdateNote(this.note,this.index);
+  const UpdateNote(this.note, this.index);
 
   @override
-  List<Object> get props => [note,index];
+  List<Object> get props => [note, index];
 }
