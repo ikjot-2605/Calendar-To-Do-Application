@@ -185,6 +185,22 @@ class _MyAppState extends State<MyApp> {
                                   },
                                 ),
                               ),
+                              Container(
+                                width: MediaQuery.of(context).size.width - 100,
+                                child: FlatButton(
+                                  child: Text(
+                                    'Decide Later',
+                                    style: TextStyle(color: Colors.white70),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ListPage()),
+                                    );
+                                  },
+                                ),
+                              ),
                             ],
                           ),
                         ),
