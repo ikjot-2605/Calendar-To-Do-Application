@@ -97,7 +97,7 @@ class _MyAppState extends State<MyApp> {
     await flutterLocalNotificationsPlugin.showDailyAtTime(
         0,
         'Check Up',
-        'You have ${noteBloc.getTasks(DateTime.now().toString())} tasks scheduled for today!',
+        'Check your tasks and get ahead of the day!',
         time,
         platformChannelSpecifics);
   }
