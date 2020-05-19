@@ -157,6 +157,15 @@ class _DayTasksState extends State<DayTasks> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
         backgroundColor: Colors.white,
         title: Text(
           'Tasks for ' + date.toString().substring(0, 10),
