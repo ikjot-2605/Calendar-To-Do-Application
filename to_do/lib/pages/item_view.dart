@@ -182,6 +182,15 @@ class _ItemListState extends State<ItemList> {
             ),
             home: Scaffold(
               appBar: AppBar(
+                leading: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: Colors.black,
+                  ),
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => ListPage()));},
+                ),
                 backgroundColor: Colors.white,
                 title: Text(
                   'Task for ' +
