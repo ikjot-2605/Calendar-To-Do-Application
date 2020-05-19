@@ -54,6 +54,9 @@ flutter:
   assets:
     - assets/loading.flr
     - assets/flow.flr
+    - assets/todo.jpeg
+    - assets/todoo.flr
+    - assets/pulsesplash.flr
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

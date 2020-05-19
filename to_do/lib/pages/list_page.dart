@@ -141,7 +141,7 @@ class _ListPageState extends State<ListPage> {
                             ),
                           ),
                           title: Text(
-                            list_todisplay[index].item1.title,
+                            list_todisplay[index].item1.title.length>43?list_todisplay[index].item1.title.substring(0,43)+"...":list_todisplay[index].item1.title,
                             style: TextStyle(
                                 fontSize: 16.5,
                                 fontFamily: 'RobotoMono',

@@ -135,15 +135,52 @@ class _MyAppState extends State<MyApp> {
                 if (firsttime == 1) {
                   return Scaffold(
                     body: Center(
-                      child: FlatButton(
-                        child: Text('Show Notification'),
-                        onPressed: () {
-                          shownotification();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => ListPage()),
-                          );
-                        },
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: <Widget>[
+                            Image(image: AssetImage('assets/todo.jpeg'),height: 120.0,),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0.0,30.0,0.0,0.0),
+                              child: Text(
+                                "WELCOME TO YOUR OWN TO-DO APP",
+                                style: TextStyle(fontSize: 30.0,color: Colors.teal),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(8.0,48.0,8.0,48.0),
+                              child: Text(
+                                "Make notes and stay ahead of your schedule!",
+                                style: TextStyle(fontSize: 20.0,color: Colors.green),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            Container(
+                              width: MediaQuery.of(context).size.width-100,
+                              child: FlatButton(
+                                child: Text('Turn on daily notifications'),
+                                color: Colors.black12,
+                                onPressed: () {
+                                  shownotification();
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => ListPage()),
+                                  );
+                                },
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(48.0),
+                              child: Text(
+                                'You will be reminded daily :)',
+                                style: TextStyle(),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   );
