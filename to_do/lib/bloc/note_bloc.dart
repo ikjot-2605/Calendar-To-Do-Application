@@ -48,4 +48,14 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
     }
     return list;
   }
+  int getTasks(String date){
+    int count=0;
+    int length=notesBox.length;
+    for(int i=0;i<length;i++){
+      if(date==notesBox.getAt(i).deadlinedate.toString().substring(0,10)){
+        count++;
+      }
+    }
+    return count;
+  }
 }

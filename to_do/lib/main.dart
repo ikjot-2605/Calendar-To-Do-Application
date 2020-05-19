@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:hive/hive.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todo/bloc/note_bloc.dart';
 import 'pages/list_page.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'model/note.dart';
@@ -9,6 +11,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+int firsttime = 0;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   RenderErrorBox.backgroundColor = Colors.transparent;
@@ -16,7 +19,21 @@ void main() async {
   final appDocumentDir = await getApplicationDocumentsDirectory();
   Hive.init(appDocumentDir.path);
   Hive.registerAdapter(NoteAdapter());
-  runApp(MyHome());
+  SharedPreferences prefs = await SharedPreferences.getInstance().then((value) {
+    bool firstTime = value.getBool('first_time');
+    if (firstTime != null && !firstTime) {
+      // Not first time
+      firsttime = 0;
+    } else {
+      // First time
+      value.setBool('first_time', false);
+      firsttime = 1;
+    }
+    if (firsttime == 0)
+      runApp(MyHome());
+    else
+      runApp(MyApp());
+  });
 }
 
 class MyHome extends StatefulWidget {
@@ -62,50 +79,88 @@ class _MyAppState extends State<MyApp> {
     flutterLocalNotificationsPlugin.initialize(initSettings,
         onSelectNotification: selectnotif);
   }
-  shownotification() async{
+
+  shownotification() async {
+    int length=notesBox.length;
+    for(int i=0;i<length;i++){
+      if(notesBox.getAt(i).deadlinedate.toString().substring(0,10)==DateTime.now().toString().substring(0,10)){
+
+      }
+    }
     var time = Time(08, 0, 0);
-    var androidPlatformChannelSpecifics =
-    AndroidNotificationDetails('repeatDailyAtTime channel id',
-        'repeatDailyAtTime channel name', 'repeatDailyAtTime description');
-    var iOSPlatformChannelSpecifics =
-    IOSNotificationDetails();
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+        'repeatDailyAtTime channel id',
+        'repeatDailyAtTime channel name',
+        'repeatDailyAtTime description');
+    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
     var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.showDailyAtTime(
         0,
-        'show daily title',
-        'Daily notification shown at approximately ',
+        'Check Up',
+        'You have ${noteBloc.getTasks(DateTime.now().toString())} tasks scheduled for today!',
         time,
         platformChannelSpecifics);
-
   }
-  Future selectnotif(String payload) async{
+
+  Future selectnotif(String payload) async {
     await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) =>ListPage()),
+      MaterialPageRoute(builder: (context) => ListPage()),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Hive Tutorial',
-      home: FutureBuilder(
-        future: Hive.openBox('notes'),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasError)
-              return Text(snapshot.error.toString());
+    return GestureDetector(
+      onTap: () {
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },
+      child: MaterialApp(
+        theme: ThemeData(
+          brightness: Brightness.light,
+          backgroundColor: Colors.white,
+        ),
+        title: 'Hive Tutorial',
+        home: FutureBuilder(
+          future: Hive.openBox('notes'),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.hasError)
+                return Text(snapshot.error.toString());
+              else {
+                if (firsttime == 1) {
+                  return Scaffold(
+                    body: Center(
+                      child: FlatButton(
+                        child: Text('Show Notification'),
+                        onPressed: () {
+                          shownotification();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => ListPage()),
+                          );
+                        },
+                      ),
+                    ),
+                  );
+                }
+                else {
+                  return ListPage();
+                }
+              }
+            }
+            // Although opening a Box takes a very short time,
+            // we still need to return something before the Future completes.
             else
-              return Scaffold(body: Center(child: FlatButton(child: Text('Show Notification'),onPressed: (){shownotification();},),),);
-          }
-          // Although opening a Box takes a very short time,
-          // we still need to return something before the Future completes.
-          else
-            return Scaffold(
-              body: FlareActor('assets/loading.flr'),
-            );
-        },
+              return Scaffold(
+                body: FlareActor('assets/loading.flr'),
+              );
+          },
+        ),
       ),
     );
   }
