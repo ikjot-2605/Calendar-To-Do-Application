@@ -172,15 +172,6 @@ class _ListPageState extends State<ListPage> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => NewNote()),
-          );
-        },
-        child: Icon(Icons.add),
-      ),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(30.0),
         child: AppBar(
@@ -262,6 +253,58 @@ class _ListPageState extends State<ListPage> {
           ),
         ],
       ),
+        bottomNavigationBar: BottomAppBar(
+          color: Colors.white,
+          child: Container(
+            decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(color: Colors.grey, width: 0.3),
+                )),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                IconButton(
+                    icon: Icon(
+                      Icons.menu,
+                      color: Colors.indigoAccent,
+                      size: 28,
+                    ),
+                    onPressed: () {
+
+                    }),
+                Expanded(
+                  child: Text(
+                    "Todo",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'RobotoMono',
+                        fontStyle: FontStyle.normal,
+                        fontSize: 19),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: Padding(
+          padding: EdgeInsets.only(bottom: 25),
+          child: FloatingActionButton(
+            elevation: 5.0,
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => NewNote()),);
+            },
+            backgroundColor: Colors.white,
+            child: Icon(
+              Icons.add,
+              size: 32,
+              color: Colors.indigoAccent,
+            ),
+          ),
+        )
     );
   }
 
