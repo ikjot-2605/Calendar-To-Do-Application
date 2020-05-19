@@ -133,53 +133,47 @@ class _MyAppState extends State<MyApp> {
                 return Text(snapshot.error.toString());
               else {
                 if (firsttime == 1) {
+                  Color gradientStart =  Color(0xffffd89b); //Change start gradient color here
+                  Color gradientEnd = Color(0xff19547b);
                   return Scaffold(
-                    body: Center(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: <Widget>[
-                            Image(image: AssetImage('assets/todo.jpeg'),height: 120.0,),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(0.0,30.0,0.0,0.0),
-                              child: Text(
-                                "WELCOME TO YOUR OWN TO-DO APP",
-                                style: TextStyle(fontSize: 30.0,color: Colors.teal),
-                                textAlign: TextAlign.center,
+                    body: Container(
+                      decoration: new BoxDecoration(
+                        gradient: new LinearGradient(colors: [gradientStart, gradientEnd],
+                            begin: const FractionalOffset(0.5, 0.0),
+                            end: const FractionalOffset(0.0, 0.5),
+                            stops: [0.0,1.0],
+                            tileMode: TileMode.clamp
+                        ),
+                      ),
+                      child: Center(
+                        child: SafeArea(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(0.0,20.0,0.0,40.0),
+                                child: Text(
+                                  "Welcome To The Best To-Do App.",
+                                  style: TextStyle(fontSize: 20.0,color: Colors.white,fontFamily: 'Pacifico'),
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(8.0,48.0,8.0,48.0),
-                              child: Text(
-                                "Make notes and stay ahead of your schedule!",
-                                style: TextStyle(fontSize: 20.0,color: Colors.green),
-                                textAlign: TextAlign.center,
+                              Container(
+                                width: MediaQuery.of(context).size.width-100,
+                                child: FlatButton(
+                                  child: Text('Turn on daily notifications',style: TextStyle(color: Colors.white70),),
+                                  onPressed: () {
+                                    shownotification();
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => ListPage()),
+                                    );
+                                  },
+                                ),
                               ),
-                            ),
-                            Container(
-                              width: MediaQuery.of(context).size.width-100,
-                              child: FlatButton(
-                                child: Text('Turn on daily notifications'),
-                                color: Colors.black12,
-                                onPressed: () {
-                                  shownotification();
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => ListPage()),
-                                  );
-                                },
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(48.0),
-                              child: Text(
-                                'You will be reminded daily :)',
-                                style: TextStyle(),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
