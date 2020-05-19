@@ -52,7 +52,8 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
     int count=0;
     int length=notesBox.length;
     for(int i=0;i<length;i++){
-      if(date==notesBox.getAt(i).deadlinedate.toString().substring(0,10)){
+      print(notesBox.getAt(i).deadlinedate.toString().substring(0,10));
+      if(date.substring(0,10)==notesBox.getAt(i).deadlinedate.toString().substring(0,10)){
         count++;
       }
     }
