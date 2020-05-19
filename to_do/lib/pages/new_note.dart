@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:todo/pages/day_tasks.dart';
 import 'package:todo/pages/list_page.dart';
-import '../model/note.dart';
-import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:todo/bloc/note_bloc.dart';
+
 class NewNote extends StatefulWidget {
   @override
   _NewNoteState createState() => _NewNoteState();
@@ -42,18 +40,14 @@ class _NewNoteState extends State<NewNote> {
           new IconButton(
             icon: const Icon(Icons.save),
             onPressed: () {
-              print("YOU'VE REACHED");
-              print(dateselected);
-              print(myController.text + " " + selectedDate.toString());
+              //processing validations
               if (dateselected == 1 &&
                   myController.text != null &&
                   myController.text != '') {
                 final NoteBloc noteBloc = NoteBloc();
-                noteBloc.add(MakeNote(myController.text,selectedDate));
+                noteBloc.add(MakeNote(myController.text, selectedDate));
                 Navigator.push(context,
-                MaterialPageRoute(builder: (context) =>
-                    ListPage())
-                );
+                    MaterialPageRoute(builder: (context) => ListPage()));
               } else {
                 showDialog(
                     context: context,
