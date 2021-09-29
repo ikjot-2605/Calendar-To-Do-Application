@@ -1,4 +1,3 @@
 # IRIS-Flutter-Bootcamp
-All my IRIS Flutter Bootcamp assignments and projects
-Please check readme's in the folder of the project.
-Thanks.
+Calendar Application to remind user of tasks remaining in his agenda.
+
